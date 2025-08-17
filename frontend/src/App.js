@@ -5,12 +5,26 @@ function App() {
   const [notes, setNotes] = useState('');
   const [report, setReport] = useState('');
 
-  const handleGenerate = (e) => {
+  const handleGenerate = async (e) => {
     e.preventDefault();
-    // Placeholder, backend ile bağlanacak
-    setReport('Your generated internship report will appear here.');
+    setReport('Generating report...');
+  
+    try {
+      const response = await fetch('http://localhost:5000/generate-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ notes }),
+      });
+  
+      const data = await response.json();
+      setReport(data.report);
+    } catch (error) {
+      setReport('Error generating report. Please try again.');
+    }
   };
-
+  
   return (
     <div style={{ minHeight: '100vh', background: '#fff5f5', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: 20 }}>
       <div style={{ maxWidth: 600, width: '100%', background: '#ffffff', padding: 30, borderRadius: 12, boxShadow: '0 8px 20px rgba(0,0,0,0.1)' }}>
